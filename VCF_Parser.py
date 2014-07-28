@@ -2,19 +2,17 @@
 from optparse import OptionParser
 
 msg_usage = 'just import these classes'
-descr ='''Define four classes. The first one GeneralVcf if used for any vcf
-fils, you can get chr, pos, Rbase, Abase, genotype info because these items
-in different vcf files at the same positons.Caveat: the raw vcf from samtools
-contain some lines which dont contain genotype info, so you should filter those
-lines firstly, then use this class.The second one is special for vcf generated
-by freebayse.Caveat: in freebayes vcf files, DP sometimes is not eqal with
+descr ='''Define four classes. The first one GeneralVcf is used for any vcf
+files, you can get chr, pos, Rbase, Abase, genotype attributes because these items
+in different vcf files at the same positons. Caveat: the raw vcf file from samtools
+don't contain the last colum which include genotype info, so you should filter those
+lines firstly, then use this class.The second one is special for vcf file generated
+by freebayse. Caveat: in freebayes vcf files, DP sometimes is not equal with
 AO+RO....  The third one is only for GATK vcf files and the last class is
-used for samtools vcf files.Design these three classes respectively because
-DP, Acount, Rcount are in different positions in different vcf files generated
-by different SNP callers.
+used for samtools vcf files. Designing these three classes respectively because
+DP, Acount, Rcount are in different vcf files with different positions.
 '''
 optparser = OptionParser(usage = msg_usage, description = descr)
-
 options, args = optparser.parse_args()
 
 class GeneralVcf:
@@ -56,5 +54,3 @@ int(self.info_dict['DP4'].split(',')[3])
             self.Rcount = 'noRecord'
             self.Acount = 'noRecord'
             self.DP = 'noRecord'
-
-
