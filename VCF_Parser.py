@@ -1,19 +1,21 @@
 #!/usr/lib/python
-from optparse import OptionParser
 
-msg_usage = 'just import these classes'
-descr ='''Define four classes. The first one GeneralVcf is used for any vcf
-files, you can get chr, pos, Rbase, Abase, genotype attributes because these items
-in different vcf files at the same positons. Caveat: the raw vcf file from samtools
-don't contain the last colum which include genotype info, so you should filter those
-lines firstly, then use this class.The second one is special for vcf file generated
-by freebayse. Caveat: in freebayes vcf files, DP sometimes is not equal with
-AO+RO....  The third one is only for GATK vcf files and the last class is
-used for samtools vcf files. Designing these three classes respectively because
-DP, Acount, Rcount are in different vcf files with different positions.
-'''
-optparser = OptionParser(usage = msg_usage, description = descr)
-options, args = optparser.parse_args()
+#from optparse import OptionParser
+
+#msg_usage = 'just import these classes'
+#descr ='''Define four classes. The first one GeneralVcf is used for any vcf
+#files, you can get chr, pos, Rbase, Abase, genotype attributes because these items
+#in different vcf files at the same positons. Caveat: the raw vcf file from samtools
+#don't contain the last colum which include genotype info, so you should filter those
+#lines firstly, then use this class.The second one is special for vcf file generated
+#by freebayse. Caveat: in freebayes vcf files, DP sometimes is not equal with
+#AO+RO....  The third one is only for GATK vcf files and the last class is
+#used for samtools vcf files. Designing these three classes respectively because
+#DP, Acount, Rcount are in different vcf files with different positions.
+#'''
+
+#optparser = OptionParser(usage = msg_usage, description = descr)
+#options, args = optparser.parse_args()
 
 class GeneralVcf:
     def __init__(self, line):
@@ -28,7 +30,10 @@ class FbVcf(GeneralVcf):
         GeneralVcf.__init__(self, line)
         self.DP = int(line.split()[-1].split(':')[1])
         self.Rcount = int(line.split()[-1].split(':')[2])
-        self.Acount = int(line.split()[-1].split(':')[4])
+        if len(line.split()[-1].split(':')[4]) == 1:
+            self.Acount = int(line.split()[-1].split(':')[4])
+        else:
+            self.Acount = max([int(i) for i in line.split()[-1].split(':')[4].split(',')])
 
 class GATKVcf(GeneralVcf):
     def __init__(self, line):
