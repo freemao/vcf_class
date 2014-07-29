@@ -26,6 +26,13 @@ class GeneralVcf:
         self.genotype = line.split()[-1].split(':')[0]
 
 class FbVcf(GeneralVcf):
+    '''the A count of freebayes may have mutiple figure, for example
+    Rcount:100, A1count:30, A2count:30. the genotype of this site called 1/2,
+    the last colum like this:
+    1/2:23:2:68:3,18:117,637:-10,-10,-10,-5.00407,0,-7.36222
+    to tacke this situation, I temporary pick the biger one as Acount.
+    '''
+
     def __init__(self, line):
         GeneralVcf.__init__(self, line)
         self.DP = int(line.split()[-1].split(':')[1])
