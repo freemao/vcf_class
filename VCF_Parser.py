@@ -39,9 +39,15 @@ class GATKVcf(GeneralVcf):
     '''This class is only used for GATK vcf files'''
     def __init__(self, line):
         GeneralVcf.__init__(self, line)
-        self.DP = int(line.split()[-1].split(':')[2])
-        self.Rcount = int(line.split()[-1].split(':')[1].split(',')[0])
-        self.Acount = int(line.split()[-1].split(':')[1].split(',')[1])
+        if len(line.split()[-1].split(':')) == 5:
+            self.DP = int(line.split()[-1].split(':')[2])
+            self.Rcount = int(line.split()[-1].split(':')[1].split(',')[0])
+            self.Acount = int(line.split()[-1].split(':')[1].split(',')[1])
+        else:
+            print "you'd better filter the line which lack of core infos..."
+            self.DP = 0
+            self.Rcount = 0
+            self.Rcount = 0
 
 class SBVcf(GeneralVcf):
     '''This class is used for samtools vcf files.'''
@@ -58,9 +64,10 @@ int(self.info_dict['DP4'].split(',')[1])
 int(self.info_dict['DP4'].split(',')[3])
             self.DP = self.Rcount + self.Acount
         else:
-            self.Rcount = 'noRecord'
-            self.Acount = 'noRecord'
-            self.DP = 'noRecord'
+            print "you'd better filter the line which lack of core infos..."
+            self.Rcount = 0
+            self.Acount = 0
+            self.DP = 0
 
 if __name__ == '__main__':
     print  'just import these classes to use.'
