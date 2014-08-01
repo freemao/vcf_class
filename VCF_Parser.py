@@ -36,7 +36,9 @@ to tacke this situation, I temporary pick the biger one as Acount.'''
             self.Acount = max([int(i) for i in line.split()[-1].split(':')[4].split(',')])
 
 class GATKVcf(GeneralVcf):
-    '''This class is only used for GATK vcf files'''
+    '''This class is only used for GATK vcf files. the raw gatk vcf files may
+contain some lines which lack of DP of AO items, so you'd better fileter them
+first.'''
     def __init__(self, line):
         GeneralVcf.__init__(self, line)
         if len(line.split()[-1].split(':')) == 5:
